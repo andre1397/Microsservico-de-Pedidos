@@ -30,7 +30,7 @@ public class OrderService {
 
     public OrderService(OrderRepository orderRepository, MongoTemplate mongoTemplate) {
         this.orderRepository = orderRepository;
-        this.mongoTemplate = mongoTemplate;// MongoTemplate é usado para interagir com o MongoDB, permitindo que sejam fetas queries mais complexas ou operações que não são suportadas pelo Spring Data MongoDB diretamente. Caso estivesse sendo usado SQL ao invés de MongoDB, seria usado JdbcTemplate ou EntityManager.
+        this.mongoTemplate = mongoTemplate;
     }
 
     public void save(OrderCreatedEventDto event){//event é o evento de criação de pedido que foi recebido do RabbitMQ, contendo os dados do pedido e dos itens do pedido recebidos na mensagem dpelo RabbitMQ
@@ -76,12 +76,12 @@ public class OrderService {
         }
 
          var aggregations = newAggregation( //Cria uma agregação para calcular o total de pedidos do cliente
-            match(Criteria.where("customerId").is(customerId)), // Filtra os pedidos pelo customerId
-            group().sum("totalValue").as("totalValue") // Calcula o total de pedidos, no SQL seria um sum, mas aqui usamos o método sum() do group() para somar o campo total de todos os pedidos do cliente
+            match(Criteria.where("customerId").is(customerId)), 
+            group().sum("totalValue").as("totalValue") 
         );
 
         var response = mongoTemplate.aggregate(aggregations, "tb_orders", Document.class); //Executa a agregação e retorna o resultado, que eh um Document
-        if (!response.iterator().hasNext()) {// verifica se o cliente existe, se nao existir, lança a exceção
+        if (!response.iterator().hasNext()) {
             throw new CustomerNotFoundException("Customer not found with id: " + customerId);
         }
 

@@ -2,15 +2,13 @@ services:
   mongodb:
     image: mongo
     ports:
-      - 27017:27017 # define a porta em que o MongoDB estará acessível
+      - 27017:27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=123
 
   rabbitmq:
-  # Define o serviço RabbitMQ, que é um sistema de mensagens que permite a comunicação entre diferentes partes da aplicação
     image: rabbitmq:3.13-management
     ports:
-      # A interface será acessivel em localhost:15672 quando o docker compose estiver rodando
-      - 15672:15672 # define a porta em que o RabbitMQ Management UI (interface grafica do rabbitmq que permite gerenciar o comportamento das mensagens) estará acessível, pra acessar a interface > browser > localhost:15672 > usuario e a senha são guest
-      - 5672:5672 # define a porta em que o RabbitMQ estará acessível para receber mensagens da aplicação
+      - 15672:15672
+      - 5672:5672

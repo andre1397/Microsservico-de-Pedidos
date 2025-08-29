@@ -10,7 +10,7 @@ public class OrderItem {
     private String product;
     private Integer quantity;
 
-    @Field(targetType = FieldType.DECIMAL128) //Faz com que o mongoDB armazene o BigDecimal como DECIMAL128 que ´um tipo de valor numerico, se nao usar esse mapeamento do Field, o dado sera salvo como texto no DB
+    @Field(targetType = FieldType.DECIMAL128)
     private BigDecimal price;
 
     public OrderItem() {

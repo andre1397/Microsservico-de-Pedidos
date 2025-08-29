@@ -39,7 +39,7 @@ class OrderControllerTest {
 
     @Test
     void listOrders_shouldReturnOrdersWithPagination() {
-        // Arrange
+        
         Long customerId = 100L;
         int page = 0;
         int pageSize = 10;
@@ -52,11 +52,11 @@ class OrderControllerTest {
         when(orderService.findTotalOnOrdersBycustomerId(customerId))
             .thenReturn(new BigDecimal("150.00"));
 
-        // Act
+        
         ResponseEntity<ApiResponse<OrderResponse>> response = 
             orderController.listOrders(customerId, page, pageSize);
 
-        // Assert
+        
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         
@@ -70,7 +70,7 @@ class OrderControllerTest {
 
     @Test
     void listOrders_shouldUseDefaultPaginationValues() {
-        // Arrange
+        
         Long customerId = 100L;
         OrderResponse orderResponse = new OrderResponse(1L, 100L, new BigDecimal("50.00"));
         Page<OrderResponse> pageResponse = new PageImpl<>(List.of(orderResponse));
@@ -80,11 +80,11 @@ class OrderControllerTest {
         when(orderService.findTotalOnOrdersBycustomerId(customerId))
             .thenReturn(new BigDecimal("150.00"));
 
-        // Act - Chamando sem parâmetros de paginação (usará defaults)
+        
         ResponseEntity<ApiResponse<OrderResponse>> response = 
             orderController.listOrders(customerId, null, null);
 
-        // Assert
+        
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().data()).hasSize(1);
@@ -92,7 +92,7 @@ class OrderControllerTest {
 
     @Test
     void getOrderById_shouldReturnOrderDetail() {
-        // Arrange
+        
         Long orderId = 1L;
         OrderDetailResponse orderDetail = new OrderDetailResponse(
             1L, 100L, new BigDecimal("50.00"), List.of()
@@ -100,10 +100,10 @@ class OrderControllerTest {
         
         when(orderService.findByOrderId(orderId)).thenReturn(orderDetail);
 
-        // Act
+        
         ResponseEntity<OrderDetailResponse> response = orderController.getOrderById(orderId);
 
-        // Assert
+        
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().orderId()).isEqualTo(1L);
@@ -112,7 +112,7 @@ class OrderControllerTest {
 
     @Test
     void getOrderById_shouldReturnCorrectOrder() {
-        // Arrange
+        
         Long orderId = 1L;
         OrderDetailResponse expectedDetail = new OrderDetailResponse(
             1L, 100L, new BigDecimal("75.50"), List.of()
@@ -120,16 +120,16 @@ class OrderControllerTest {
         
         when(orderService.findByOrderId(orderId)).thenReturn(expectedDetail);
 
-        // Act
+        
         ResponseEntity<OrderDetailResponse> response = orderController.getOrderById(orderId);
 
-        // Assert
+        
         assertThat(response.getBody()).isEqualTo(expectedDetail);
     }
 
     @Test
     void listOrders_shouldReturnCorrectPaginationInfo() {
-        // Arrange
+        
         Long customerId = 100L;
         OrderResponse order1 = new OrderResponse(1L, 100L, new BigDecimal("50.00"));
         OrderResponse order2 = new OrderResponse(2L, 100L, new BigDecimal("75.00"));
@@ -140,11 +140,11 @@ class OrderControllerTest {
         when(orderService.findTotalOnOrdersBycustomerId(customerId))
             .thenReturn(new BigDecimal("125.00"));
 
-        // Act
+        
         ResponseEntity<ApiResponse<OrderResponse>> response = 
             orderController.listOrders(customerId, 0, 10);
 
-        // Assert
+        
         assertThat(response.getBody().pagination()).isNotNull();
         PaginationResponse pagination = response.getBody().pagination();
         assertThat(pagination.page()).isEqualTo(0);

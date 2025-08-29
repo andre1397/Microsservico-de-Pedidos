@@ -15,12 +15,12 @@ import tech.desafiobtg.orderms.dto.OrderCreatedEventDto;
 import tech.desafiobtg.orderms.exception.OrderProcessingException;
 import tech.desafiobtg.orderms.service.OrderService;
 
-@Component // Anotação para indicar que esta classe é um componente do Spring, permitindo que seja detectada e gerenciada pelo contexto do Spring
-// A anotação @Component é usada para registrar a classe como um bean no contexto do Spring. Um bean é um objeto que é instanciado, montado e gerenciado pelo contêiner do Spring. Isso permite que o Spring cuide do ciclo de vida do objeto, injeção de dependências e outras funcionalidades relacionadas ao gerenciamento de beans.
-// Isso é útil para classes que precisam ser detectadas automaticamente pelo Spring, como listeners, serviços
+@Component 
+
+
 public class OrderCreatedListener {
 
-    private final Logger logger = LoggerFactory.getLogger(OrderCreatedListener.class); // Cria um logger para registrar mensagens de log, útil para depuração e monitoramento
+    private final Logger logger = LoggerFactory.getLogger(OrderCreatedListener.class); 
 
     private final OrderService orderService;
 
@@ -33,23 +33,23 @@ public class OrderCreatedListener {
      * Usa Message<OrderCreatedEventDto> para capturar o payload e headers da mensagem.
      * ackMode="MANUAL" permite confirmar manualmente o recebimento.
      */
-    @RabbitListener(queues = ORDER_CREATED_QUEUE, ackMode = "MANUAL")// Anotação para indicar que este método deve ser chamado quando uma mensagem for recebida na fila especificada. A fila é definida na constante ORDER_CREATED_QUEUE, que deve corresponder ao nome da fila configurada no RabbitMQ do pacote config.
-    public void listen(Message<OrderCreatedEventDto> message, Channel channel) {//Message é uma classe do Spring que encapsula a mensagem recebida, incluindo o payload e os headers. OrderCreatedEventDto é o tipo de dado que esperamos receber na mensagem, representando o evento de criação de pedido. Channel é usado para enviar confirmações (ack) ou rejeições (nack) da mensagem processada.
+    @RabbitListener(queues = ORDER_CREATED_QUEUE, ackMode = "MANUAL")
+    public void listen(Message<OrderCreatedEventDto> message, Channel channel) {
         logger.info("Mensagem recebida: {}", message);
 
         try {
-            // Processa o payload
+            
             OrderCreatedEventDto orderEvent = message.getPayload();
-            orderService.save(orderEvent);//Chama o serviço para salvar o pedido na base de dados. O payload da mensagem contém os dados do pedido, que serão usados para criar um objeto OrderEntity e salvar no banco de dados, eh o conteudo da mensagem
+            orderService.save(orderEvent);
 
-            // Confirma manualmente que a mensagem foi processada
+            
             channel.basicAck(
                     (Long) message.getHeaders().get("amqp_deliveryTag"), 
                     false
             );
         } catch (IOException ex) {
             try {
-                // Envia NACK em caso de erro, evitando reentrega infinita, pois o padrão do RavvitMQ é reentregar mensagens que não foram confirmadas e caso esteja com uma falha, ficará dando erro infinitamente
+                
                 channel.basicNack(
                         (Long) message.getHeaders().get("amqp_deliveryTag"), 
                         false, 

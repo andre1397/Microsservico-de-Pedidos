@@ -24,9 +24,9 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/customers/{customerId}/orders") //Chama as orders de acordo com o cliente identificado pelo customerId
-    public ResponseEntity<ApiResponse<OrderResponse>> listOrders(@PathVariable("customerId") Long customerId, //PathVariable vai dentro da url, nesse caso = http://localhost:8080/customers/{customerId}/orders ou http://localhost:8080/customers/1/orders?page={page}&pageSize={pageSize}
-                                                                 @RequestParam(name = "page", defaultValue = "0") Integer page,//RequestParam vai depois do ? na url da requisicao
+    @GetMapping("/customers/{customerId}/orders")
+    public ResponseEntity<ApiResponse<OrderResponse>> listOrders(@PathVariable("customerId") Long customerId,
+                                                                 @RequestParam(name = "page", defaultValue = "0") Integer page,
                                                                  @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
 
         page = page != null ? page : 0;
@@ -37,7 +37,7 @@ public class OrderController {
         var totalOnOrders = orderService.findTotalOnOrdersBycustomerId(customerId); 
 
         return ResponseEntity.ok(new ApiResponse<>(
-            Map.of("totalOnOrders", totalOnOrders),//Map.of cria um mapa com o total de pedidos do cliente, que sera usado no summary da resposta
+            Map.of("totalOnOrders", totalOnOrders),
             pageResponse.getContent(),
             PaginationResponse.fromPage(pageResponse)
         ));

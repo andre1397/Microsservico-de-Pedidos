@@ -116,7 +116,7 @@ class OrderServiceTest {
 
    @Test
     void findTotalOnOrdersBycustomerId_shouldReturnTotalValue() {
-        // Simula o retorno do MongoTemplate
+        
         Document doc = new Document("totalValue", new BigDecimal("99.99"));
         AggregationResults<Document> results = new AggregationResults<>(List.of(doc), new Document());
 
@@ -131,11 +131,11 @@ class OrderServiceTest {
 
     @Test
     void findTotalOnOrdersBycustomerId_shouldThrowException_whenNoResult() {
-        // Mock do iterator vazio
-        Iterator<Document> iterator = mock(Iterator.class);
-        when(iterator.hasNext()).thenReturn(false); // Isso fará o serviço lançar a exceção
         
-        // Mock do AggregationResults
+        Iterator<Document> iterator = mock(Iterator.class);
+        when(iterator.hasNext()).thenReturn(false); 
+        
+        
         AggregationResults<Document> results = mock(AggregationResults.class);
         when(results.iterator()).thenReturn(iterator);
         
@@ -153,11 +153,11 @@ class OrderServiceTest {
         entity.setOrderId(1L);
         entity.setCustomerId(100L);
         
-        // Inicializa a lista de itens para evitar NullPointerException
+        
         var orderItem = new OrderItem("Produto A", 2, new BigDecimal("10.00"));
         entity.setItems(List.of(orderItem));
         
-        // Configura o totalValue também, se necessário
+        
         entity.setTotalValue(new BigDecimal("20.00"));
         
         when(orderRepository.findById(1L)).thenReturn(Optional.of(entity));
